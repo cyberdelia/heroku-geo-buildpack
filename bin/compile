@@ -47,6 +47,11 @@ function set-default-env (){
   echo "export $1=\${$1:-$2}" >> $PROFILE_PATH
 }
 
+# Display some information
+echo "Using geos version: ${GEOS_VERSION}" | indent
+echo "Using gdal version: ${GDAL_VERSION}" | indent
+echo "Using proj version: ${PROJ_VERSION}" | indent
+
 # Vendor directories
 VENDORED_GEOS="vendor/geos"
 VENDORED_GDAL="vendor/gdal"
