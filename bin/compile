@@ -19,6 +19,7 @@ S3_BUCKET="cyberdelia-geo-buildpack"
 # Parameters
 BUILD_DIR=$1
 CACHE_DIR=$2
+PROFILE_PATH="$BUILD_DIR/.profile.d/geo.sh"
 
 # Functions
 function indent() {
@@ -37,6 +38,14 @@ function download_package() {
   mkdir -p $location
   package="https://${S3_BUCKET}.s3.amazonaws.com/$name-$version.tgz"
   curl $package -s -o - | tar xzf - -C $location
+}
+
+function set-env (){
+  echo "export $1=$2" >> $PROFILE_PATH
+}
+
+function set-default-env (){
+  echo "export $1=\${$1:-$2}" >> $PROFILE_PATH
 }
 
 # Vendor directories
@@ -58,5 +67,8 @@ LD_LIBRARY_PATH="$BUILD_DIR/$VENDORED_PROJ/lib:$LD_LIBRARY_PATH"
 echo "-----> Fetching and vendoring proj"
 mkdir -p "$BUILD_DIR/$VENDORED_PROJ"
 download_package "proj" "${PROJ_VERSION}" "${BUILD_DIR}/${VENDORED_PROJ}"
+
+set-default-env LIBRARY_PATH $LD_LIBRARY_PATH
+set-default-env LD_LIBRARY_PATH $LD_LIBRARY_PATH
 
 echo "-----> vendoring geo libraries done"
