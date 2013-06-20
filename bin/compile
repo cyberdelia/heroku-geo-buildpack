@@ -61,20 +61,23 @@ VENDORED_GEOS="vendor/geos"
 VENDORED_GDAL="vendor/gdal"
 VENDORED_PROJ="vendor/proj"
 
-
 if [ ! -d $CACHE_DIR/$VENDORED_GEOS ]; then
   echo "-----> Fetching and vendoring geos"
   mkdir -p "$CACHE_DIR/$VENDORED_GEOS"
   download_package "geos" "${GEOS_VERSION}" "${CACHE_DIR}/${VENDORED_GEOS}"
 fi
 
-echo "-----> Fetching and vendoring gdal"
-mkdir -p "$BUILD_DIR/$VENDORED_GDAL"
-download_package "gdal" "${GDAL_VERSION}" "${BUILD_DIR}/${VENDORED_GDAL}"
+if [ ! -d $CACHE_DIR/$VENDORED_GDAL ]; then
+  echo "-----> Fetching and vendoring gdal"
+  mkdir -p "$CACHE_DIR/$VENDORED_GDAL"
+  download_package "gdal" "${GDAL_VERSION}" "${CACHE_DIR}/${VENDORED_GDAL}"
+fi
 
-echo "-----> Fetching and vendoring proj"
-mkdir -p "$BUILD_DIR/$VENDORED_PROJ"
-download_package "proj" "${PROJ_VERSION}" "${BUILD_DIR}/${VENDORED_PROJ}"
+if [ ! -d $CACHE_DIR/$VENDORED_PROJ ]; then
+  echo "-----> Fetching and vendoring proj"
+  mkdir -p "$CACHE_DIR/$VENDORED_PROJ"
+  download_package "proj" "${PROJ_VERSION}" "${CACHE_DIR}/${VENDORED_PROJ}"
+fi
 
 # Setup environment variables
 set-env GEOS_LIBRARY_PATH "/app/vendor/geos/lib"
