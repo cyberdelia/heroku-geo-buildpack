@@ -19,7 +19,10 @@ S3_BUCKET="cyberdelia-geo-buildpack"
 # Parameters
 BUILD_DIR=$1
 CACHE_DIR=$2
+
+# Setup profile file
 PROFILE_PATH="$BUILD_DIR/.profile.d/geo.sh"
+mkdir -p $(dirname $PROFILE_PATH)
 
 # Functions
 function indent() {
