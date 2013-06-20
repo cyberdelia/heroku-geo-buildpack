@@ -61,9 +61,12 @@ VENDORED_GEOS="vendor/geos"
 VENDORED_GDAL="vendor/gdal"
 VENDORED_PROJ="vendor/proj"
 
-echo "-----> Fetching and vendoring geos"
-mkdir -p "$BUILD_DIR/$VENDORED_GEOS"
-download_package "geos" "${GEOS_VERSION}" "${BUILD_DIR}/${VENDORED_GEOS}"
+
+if [ ! -d $CACHE_DIR/$VENDORED_GEOS ]; then
+  echo "-----> Fetching and vendoring geos"
+  mkdir -p "$CACHE_DIR/$VENDORED_GEOS"
+  download_package "geos" "${GEOS_VERSION}" "${CACHE_DIR}/${VENDORED_GEOS}"
+fi
 
 echo "-----> Fetching and vendoring gdal"
 mkdir -p "$BUILD_DIR/$VENDORED_GDAL"
