@@ -43,6 +43,10 @@ function download_package() {
   curl $package -s -o - | tar xzf - -C $location
 }
 
+function set-env (){
+  echo "export $1=$2" >> $PROFILE_PATH
+}
+
 function set-default-env (){
   echo "export $1=\${$1:-$2}" >> $PROFILE_PATH
 }
@@ -68,6 +72,11 @@ download_package "gdal" "${GDAL_VERSION}" "${BUILD_DIR}/${VENDORED_GDAL}"
 echo "-----> Fetching and vendoring proj"
 mkdir -p "$BUILD_DIR/$VENDORED_PROJ"
 download_package "proj" "${PROJ_VERSION}" "${BUILD_DIR}/${VENDORED_PROJ}"
+
+# Setup environment variables
+set-env GEOS_LIBRARY_PATH "/app/vendor/geos/lib"
+set-env GDAL_LIBRARY_PATH "/app/vendor/gdal/lib"
+set-env PROJ4_LIBRARY_PATH "/app/vendor/proj/lib"
 
 set-default-env LIBRARY_PATH "/app/vendor/geos/lib:/app/vendor/gdal/lib:/app/vendor/proj/lib"
 set-default-env LD_LIBRARY_PATH "/app/vendor/geos/lib:/app/vendor/gdal/lib:/app/vendor/proj/lib"
