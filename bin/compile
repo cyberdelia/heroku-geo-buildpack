@@ -56,22 +56,19 @@ VENDORED_GEOS="vendor/geos"
 VENDORED_GDAL="vendor/gdal"
 VENDORED_PROJ="vendor/proj"
 
-LD_LIBRARY_PATH="$BUILD_DIR/$VENDORED_GEOS/bin:$LD_LIBRARY_PATH"
 echo "-----> Fetching and vendoring geos"
 mkdir -p "$BUILD_DIR/$VENDORED_GEOS"
 download_package "geos" "${GEOS_VERSION}" "${BUILD_DIR}/${VENDORED_GEOS}"
 
-LD_LIBRARY_PATH="$BUILD_DIR/$VENDORED_GDAL/bin:$LD_LIBRARY_PATH"
 echo "-----> Fetching and vendoring gdal"
 mkdir -p "$BUILD_DIR/$VENDORED_GDAL"
 download_package "gdal" "${GDAL_VERSION}" "${BUILD_DIR}/${VENDORED_GDAL}"
 
-LD_LIBRARY_PATH="$BUILD_DIR/$VENDORED_PROJ/lib:$LD_LIBRARY_PATH"
 echo "-----> Fetching and vendoring proj"
 mkdir -p "$BUILD_DIR/$VENDORED_PROJ"
 download_package "proj" "${PROJ_VERSION}" "${BUILD_DIR}/${VENDORED_PROJ}"
 
-set-default-env LIBRARY_PATH $LD_LIBRARY_PATH
-set-default-env LD_LIBRARY_PATH $LD_LIBRARY_PATH
+set-default-env LIBRARY_PATH "/app/vendor/geos/lib:/app/vendor/gdal/lib:/app/vendor/proj/lib"
+set-default-env LD_LIBRARY_PATH "/app/vendor/geos/lib:/app/vendor/gdal/lib:/app/vendor/proj/lib"
 
 echo "-----> vendoring geo libraries done"
