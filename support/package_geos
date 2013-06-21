@@ -1,0 +1,50 @@
+#!/bin/sh
+
+set -e
+
+geos_version="$1"
+
+if [ "$geos_version" == "" ]; then
+  echo "usage: $0 VERSION"
+  exit 1
+fi
+
+if [ "$AWS_ID" == "" ]; then
+  echo "must set AWS_ID"
+  exit 1
+fi
+
+if [ "$AWS_SECRET" == "" ]; then
+  echo "must set AWS_SECRET"
+  exit 1
+fi
+
+if [ "$S3_BUCKET" == "" ]; then
+  echo "must set S3_BUCKET"
+  exit 1
+fi
+
+basedir="$( cd -P "$( dirname "$0" )" && pwd )"
+
+# make a temp directory
+tempdir="$( mktemp -t geos_$geos_version )"
+rm -rf $tempdir
+mkdir -p $tempdir
+cd $tempdir
+
+curl http://download.osgeo.org/geos/geos-$geos_version.tar.bz2 -s -o - | bunzip2 -c | gzip -c > geos-${geos_version}.tar.gz
+
+# build and package geos for heroku
+vulcan build -v \
+  -n geos \
+  -c "cd geos-${geos_version} && ./configure --prefix=/app/vendor/geos && make && make install" \
+  -p /app/vendor/geos \
+  -s geos-${geos_version}.tar.gz \
+  -o $tempdir/geos-${geos_version}.tgz
+
+# upload geos to s3
+$basedir/aws/s3 put $S3_BUCKET \
+  geos-${geos_version}.tgz $tempdir/geos-${geos_version}.tgz
+
+# generate manifest
+$basedir/manifest geos
