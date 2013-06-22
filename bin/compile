@@ -11,9 +11,6 @@ set -e
 unset GIT_DIR
 
 # Configuration
-GEOS_VERSION="3.3.8"
-GDAL_VERSION="1.10.0"
-PROJ_VERSION="4.8.0"
 S3_BUCKET="cyberdelia-geo-buildpack"
 
 # Parameters
@@ -33,6 +30,10 @@ function indent() {
   esac
 }
 
+function manifest_versions() {
+  curl "http://${S3_BUCKET}.s3.amazonaws.com/manifest.${1}" -s -o - | tr -s '\n' ' '
+}
+
 function download_package() {
   name="$1"
   version="$2"
@@ -50,6 +51,11 @@ function set-env (){
 function set-default-env (){
   echo "export $1=\${$1:-$2}" >> $PROFILE_PATH
 }
+
+# Retrieve versions
+GEOS_VERSION=$(manifest_versions "geos")
+GDAL_VERSION=$(manifest_versions "gdal")
+PROJ_VERSION=$(manifest_versions "proj")
 
 # Display some information
 echo "Using geos version: ${GEOS_VERSION}" | indent
