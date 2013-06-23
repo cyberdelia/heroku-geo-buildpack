@@ -31,7 +31,7 @@ function indent() {
 }
 
 function manifest_versions() {
-  curl "http://${S3_BUCKET}.s3.amazonaws.com/manifest.${1}" -s -o - | tr -s '\n' ' '
+  curl "http://${S3_BUCKET}.s3.amazonaws.com/manifest.${1}" -s -o -
 }
 
 function download_package() {
