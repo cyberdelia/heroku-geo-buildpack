@@ -63,35 +63,43 @@ echo "Using gdal version: ${GDAL_VERSION}" | indent
 echo "Using proj version: ${PROJ_VERSION}" | indent
 
 # Vendor directories
-VENDORED_GEOS="vendor/geos"
-VENDORED_GDAL="vendor/gdal"
-VENDORED_PROJ="vendor/proj"
+VENDORED_GEOS="vendor/geos/$GEOS_VERSION"
+VENDORED_GDAL="vendor/gdal/$GDAL_VERSION"
+VENDORED_PROJ="vendor/proj/$PROJ_VERSION"
 
 if [ ! -d $CACHE_DIR/$VENDORED_GEOS ]; then
   echo "-----> Fetching and vendoring geos"
+  rm -R "$CACHE_DIR/vendor/geos"
   mkdir -p "$CACHE_DIR/$VENDORED_GEOS"
   download_package "geos" "${GEOS_VERSION}" "${CACHE_DIR}/${VENDORED_GEOS}"
 fi
 
 if [ ! -d $CACHE_DIR/$VENDORED_GDAL ]; then
   echo "-----> Fetching and vendoring gdal"
+  rm -R "$CACHE_DIR/vendor/gdal"
   mkdir -p "$CACHE_DIR/$VENDORED_GDAL"
   download_package "gdal" "${GDAL_VERSION}" "${CACHE_DIR}/${VENDORED_GDAL}"
 fi
 
 if [ ! -d $CACHE_DIR/$VENDORED_PROJ ]; then
   echo "-----> Fetching and vendoring proj"
+  rm -R "$CACHE_DIR/vendor/proj"
   mkdir -p "$CACHE_DIR/$VENDORED_PROJ"
   download_package "proj" "${PROJ_VERSION}" "${CACHE_DIR}/${VENDORED_PROJ}"
 fi
 
-# Setup environment variables
-set-env GEOS_LIBRARY_PATH "/app/vendor/geos/lib"
-set-env GDAL_LIBRARY_PATH "/app/vendor/gdal/lib"
-set-env PROJ4_LIBRARY_PATH "/app/vendor/proj/lib"
+# App directories
+APP_GEOS="/app/$VENDORED_GEOS"
+APP_GDAL="/app/$VENDORED_GDAL"
+APP_PROJ="/app/$VENDORED_PROJ"
 
-set-default-env LIBRARY_PATH "/app/vendor/geos/lib:/app/vendor/gdal/lib:/app/vendor/proj/lib"
-set-default-env LD_LIBRARY_PATH "/app/vendor/geos/lib:/app/vendor/gdal/lib:/app/vendor/proj/lib"
-set-default-env CPATH "/app/vendor/geos/include:/app/vendor/gdal/include:/app/vendor/proj/include"
+# Setup environment variables
+set-env GEOS_LIBRARY_PATH "$APP_GEOS/lib"
+set-env GDAL_LIBRARY_PATH "$APP_GDAL/lib"
+set-env PROJ4_LIBRARY_PATH "$APP_PROJ/lib"
+
+set-default-env LIBRARY_PATH "$APP_GEOS/lib:$APP_GDAL/lib:$APP_PROJ/lib"
+set-default-env LD_LIBRARY_PATH "$APP_GEOS/lib:$APP_GDAL/lib:$APP_PROJ/lib"
+set-default-env CPATH "$APP_GEOS/include:$APP_GDAL/include:$APP_PROJ/include"
 
 echo "-----> Vendoring geo libraries done"
