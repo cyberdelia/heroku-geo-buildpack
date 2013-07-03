@@ -90,7 +90,7 @@ fi
 
 # Copy artifacts out of cache if exists.
 mkdir -p $CACHE_DIR
-cp -r $CACHE_DIR/ $BUILD_DIR &> /dev/null || true
+cp -r $CACHE_DIR/* $BUILD_DIR/ &> /dev/null || true
 
 # App directories
 APP_GEOS="/app/$VENDORED_GEOS"
