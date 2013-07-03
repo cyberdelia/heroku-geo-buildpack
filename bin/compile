@@ -69,21 +69,21 @@ VENDORED_PROJ="vendor/proj/$PROJ_VERSION"
 
 if [ ! -d $CACHE_DIR/$VENDORED_GEOS ]; then
   echo "-----> Fetching and vendoring geos"
-  rm -R "$CACHE_DIR/vendor/geos"
+  rm -rf "$CACHE_DIR/vendor/geos"
   mkdir -p "$CACHE_DIR/$VENDORED_GEOS"
   download_package "geos" "${GEOS_VERSION}" "${CACHE_DIR}/${VENDORED_GEOS}"
 fi
 
 if [ ! -d $CACHE_DIR/$VENDORED_GDAL ]; then
   echo "-----> Fetching and vendoring gdal"
-  rm -R "$CACHE_DIR/vendor/gdal"
+  rm -rf "$CACHE_DIR/vendor/gdal"
   mkdir -p "$CACHE_DIR/$VENDORED_GDAL"
   download_package "gdal" "${GDAL_VERSION}" "${CACHE_DIR}/${VENDORED_GDAL}"
 fi
 
 if [ ! -d $CACHE_DIR/$VENDORED_PROJ ]; then
   echo "-----> Fetching and vendoring proj"
-  rm -R "$CACHE_DIR/vendor/proj"
+  rm -rf "$CACHE_DIR/vendor/proj"
   mkdir -p "$CACHE_DIR/$VENDORED_PROJ"
   download_package "proj" "${PROJ_VERSION}" "${CACHE_DIR}/${VENDORED_PROJ}"
 fi
