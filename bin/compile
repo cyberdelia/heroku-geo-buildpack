@@ -88,6 +88,10 @@ if [ ! -d $CACHE_DIR/$VENDORED_PROJ ]; then
   download_package "proj" "${PROJ_VERSION}" "${CACHE_DIR}/${VENDORED_PROJ}"
 fi
 
+# Copy artifacts out of cache if exists.
+mkdir -p $CACHE_DIR
+cp -r $CACHE_DIR/ $BUILD_DIR &> /dev/null || true
+
 # App directories
 APP_GEOS="/app/$VENDORED_GEOS"
 APP_GDAL="/app/$VENDORED_GDAL"
