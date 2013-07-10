@@ -88,7 +88,8 @@ fi
 # Copy artifacts out of cache if exists.
 mkdir -p $CACHE_DIR
 for dir in $VENDORED_GEOS $VENDORED_GDAL $VENDORED_PROJ; do
-  cp -r $CACHE_DIR/$dir $BUILD_DIR &> /dev/null || true
+  mkdir -p $BUILD_DIR/$dir
+  cp -r $CACHE_DIR/$dir/* $BUILD_DIR/$dir &> /dev/null || true
 done
 
 # App directories
