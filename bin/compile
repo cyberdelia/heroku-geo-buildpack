@@ -87,7 +87,6 @@ fi
 
 # Copy artifacts out of cache if exists.
 mkdir -p $CACHE_DIR
-cp -r $CACHE_DIR/* $BUILD_DIR/ &> /dev/null || true
 
 # App directories
 APP_GEOS="/app/$VENDORED_GEOS"
@@ -98,7 +97,7 @@ APP_PROJ="/app/$VENDORED_PROJ"
 set-env GEOS_LIBRARY_PATH "$APP_GEOS/lib"
 set-env GDAL_LIBRARY_PATH "$APP_GDAL/lib"
 set-env PROJ4_LIBRARY_PATH "$APP_PROJ/lib"
-set-env GDAL_DATA `$APP_GDAL/bin/gdal-config --datadir`
+set-env GDAL_DATA "$APP_GDAL/share/gdal"
 
 set-default-env LIBRARY_PATH "$APP_GEOS/lib:$APP_GDAL/lib:$APP_PROJ/lib"
 set-default-env LD_LIBRARY_PATH "$APP_GEOS/lib:$APP_GDAL/lib:$APP_PROJ/lib"
