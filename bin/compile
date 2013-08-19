@@ -30,8 +30,8 @@ function indent() {
   esac
 }
 
-function manifest_versions() {
-  curl "http://${S3_BUCKET}.s3.amazonaws.com/manifest.${1}" -s -o -
+function manifest_version() {
+  curl "http://${S3_BUCKET}.s3.amazonaws.com/manifest.${1}" -s -o - | head -n 1
 }
 
 function download_package() {
@@ -53,9 +53,9 @@ function set-default-env (){
 }
 
 # Retrieve versions
-GEOS_VERSION=$(manifest_versions "geos")
-GDAL_VERSION=$(manifest_versions "gdal")
-PROJ_VERSION=$(manifest_versions "proj")
+GEOS_VERSION=$(manifest_version "geos")
+GDAL_VERSION=$(manifest_version "gdal")
+PROJ_VERSION=$(manifest_version "proj")
 
 # Display some information
 echo "Using geos version: ${GEOS_VERSION}" | indent
