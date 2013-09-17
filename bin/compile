@@ -109,6 +109,8 @@ set-default-env CPATH "$APP_GEOS/include:$APP_GDAL/include:$APP_PROJ/include"
 
 # Configure bundle
 mkdir -p $BUILD_DIR/.bundle
-echo "BUNDLE_BUILD__RGEO: --with-geos-dir=$APP_GEOS --with-geos-lib=$GEOS_LIBRARY_PATH --with-proj-dir=$APP_PROJ --with-proj-lib=$PROJ4_LIBRARY_PATH" >> $BUILD_DIR/.bundle/config
+echo "BUNDLE_BUILD__RGEO: --with-geos-dir=$APP_GEOS --with-geos-lib=$GEOS_LIBRARY_PATH --with-proj-dir=$APP_PROJ --with-proj-lib=$PROJ4_LIBRARY_PATH" > $BUILD_DIR/.bundle/config
+
+rm -rf $CACHE_DIR/vendor/bundle
 
 echo "-----> Vendoring geo libraries done"
