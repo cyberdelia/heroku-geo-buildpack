@@ -105,9 +105,12 @@ set-env GDAL_DATA "$APP_GDAL/share/gdal"
 
 # Bundle workaround
 mkdir -p $BUILD_DIR/.bundle
-echo "---
+if [ -f $CACHE_DIR/.bundle/config ]; then
+  mv $CACHE_DIR/.bundle/config > $BUILD_DIR/.bundle/config
+fi
+echo "
 BUNDLE_BUILD__RGEO: --with-geos-dir=$BUILD_DIR/$VENDORED_GEOS --with-geos-lib=$BUILD_DIR/$VENDORED_GEOS/lib --with-proj-dir=$BUILD_DIR/$VENDORED_PROJ --with-proj-lib=$BUILD_DIR/$VENDORED_PROJ/lib
-" > $BUILD_DIR/.bundle/config
+" >> $BUILD_DIR/.bundle/config
 
 set-default-env LIBRARY_PATH "$APP_GEOS/lib:$APP_GDAL/lib:$APP_PROJ/lib"
 set-default-env LD_LIBRARY_PATH "$APP_GEOS/lib:$APP_GDAL/lib:$APP_PROJ/lib"
