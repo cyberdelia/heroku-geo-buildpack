@@ -103,6 +103,8 @@ set-env GDAL_LIBRARY_PATH "$APP_GDAL/lib"
 set-env PROJ4_LIBRARY_PATH "$APP_PROJ/lib"
 set-env GDAL_DATA "$APP_GDAL/share/gdal"
 
+set-env BUNDLE_BUILD__RGEO "--with-geos-dir=$BUILD_DIR/$VENDORED_GEOS --with-geos-lib=$BUILD_DIR/$VENDORED_GEOS/lib --with-proj-dir=$BUILD_DIR/$VENDORED_PROJ --with-proj-lib=$BUILD_DIR/$VENDORED_PROJ/lib"
+
 set-default-env LIBRARY_PATH "$APP_GEOS/lib:$APP_GDAL/lib:$APP_PROJ/lib"
 set-default-env LD_LIBRARY_PATH "$APP_GEOS/lib:$APP_GDAL/lib:$APP_PROJ/lib"
 set-default-env CPATH "$APP_GEOS/include:$APP_GDAL/include:$APP_PROJ/include"
