@@ -67,6 +67,9 @@ VENDORED_GEOS="vendor/geos/$GEOS_VERSION"
 VENDORED_GDAL="vendor/gdal/$GDAL_VERSION"
 VENDORED_PROJ="vendor/proj/$PROJ_VERSION"
 
+# Make sure cache dir exists
+mkdir -p $CACHE_DIR
+
 if [ ! -d $CACHE_DIR/$VENDORED_GEOS ]; then
   echo "-----> Fetching and vendoring geos"
   rm -rf "$CACHE_DIR/vendor/geos"
@@ -85,23 +88,21 @@ if [ ! -d $CACHE_DIR/$VENDORED_PROJ ]; then
   download_package "proj" "${PROJ_VERSION}" "${CACHE_DIR}/${VENDORED_PROJ}"
 fi
 
+TARGET_VENDOR_DIR=".heroku/vendor"
 # Copy artifacts out of cache if exists.
-mkdir -p $CACHE_DIR
 for dir in $VENDORED_GEOS $VENDORED_GDAL $VENDORED_PROJ; do
-  mkdir -p $BUILD_DIR/$dir
-  cp -r $CACHE_DIR/$dir/* $BUILD_DIR/$dir &> /dev/null || true
+  mkdir -p $BUILD_DIR/$TARGET_VENDOR_DIR
+  cp -r $CACHE_DIR/$dir/* $BUILD_DIR/$TARGET_VENDOR_DIR &> /dev/null || true
 done
 
 # App directories
-APP_GEOS="/app/$VENDORED_GEOS"
-APP_GDAL="/app/$VENDORED_GDAL"
-APP_PROJ="/app/$VENDORED_PROJ"
+APP_VENDOR="/app/$TARGET_VENDOR_DIR"
 
 # Setup environment variables
-set-env GEOS_LIBRARY_PATH "$APP_GEOS/lib"
-set-env GDAL_LIBRARY_PATH "$APP_GDAL/lib"
-set-env PROJ4_LIBRARY_PATH "$APP_PROJ/lib"
-set-env GDAL_DATA "$APP_GDAL/share/gdal"
+set-env GEOS_LIBRARY_PATH "$APP_VENDOR/lib"
+set-env GDAL_LIBRARY_PATH "$APP_VENDOR/lib"
+set-env PROJ4_LIBRARY_PATH "$APP_VENDOR/lib"
+set-env GDAL_DATA "$APP_VENDOR/share/gdal"
 
 # Bundle workaround
 mkdir -p $BUILD_DIR/.bundle
@@ -109,7 +110,7 @@ if [ -f $CACHE_DIR/.bundle/config ]; then
   rm $CACHE_DIR/.bundle/config
 fi
 echo "---
-BUNDLE_BUILD__RGEO: --with-geos-dir=$BUILD_DIR/$VENDORED_GEOS --with-geos-lib=$BUILD_DIR/$VENDORED_GEOS/lib --with-proj-dir=$BUILD_DIR/$VENDORED_PROJ --with-proj-lib=$BUILD_DIR/$VENDORED_PROJ/lib
+BUNDLE_BUILD__RGEO: --with-geos-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-geos-lib=$BUILD_DIR/$TARGET_VENDOR_DIR/lib --with-proj-dir=$BUILD_DIR/$TARGET_VENDOR_DIR--with-proj-lib=$BUILD_DIR/$TARGET_VENDOR_DIR/lib
 BUNDLE_FROZEN: '1'
 BUNDLE_PATH: vendor/bundle
 BUNDLE_BIN: vendor/bundle/bin
@@ -117,8 +118,8 @@ BUNDLE_WITHOUT: development:test
 BUNDLE_DISABLE_SHARED_GEMS: '1'
 " > $BUILD_DIR/.bundle/config
 
-set-default-env LIBRARY_PATH "$APP_GEOS/lib:$APP_GDAL/lib:$APP_PROJ/lib"
-set-default-env LD_LIBRARY_PATH "$APP_GEOS/lib:$APP_GDAL/lib:$APP_PROJ/lib"
-set-default-env CPATH "$APP_GEOS/include:$APP_GDAL/include:$APP_PROJ/include"
+set-default-env LIBRARY_PATH "$APP_VENDOR/lib"
+set-default-env LD_LIBRARY_PATH "$APP_VENDOR/lib"
+set-default-env CPATH "$APP_VENDOR/include"
 
 echo "-----> Vendoring geo libraries done"
