@@ -1,13 +1,5 @@
 #!/bin/sh
-
 set -e
-
-proj_version="$1"
-
-if [ "$proj_version" == "" ]; then
-  echo "usage: $0 VERSION"
-  exit 1
-fi
 
 if [ "$AWS_ID" == "" ]; then
   echo "must set AWS_ID"
@@ -25,24 +17,10 @@ if [ "$S3_BUCKET" == "" ]; then
 fi
 
 basedir="$( cd -P "$( dirname "$0" )" && pwd )"
-
-# make a temp directory
-tempdir="$( mktemp -t proj_$proj_version )"
-rm -rf $tempdir
-mkdir -p $tempdir
-cd $tempdir
-
-# build and package proj for heroku
-vulcan build -v \
-  -n proj \
-  -c "cd proj-${proj_version} && ./configure --prefix=/app/vendor/proj && make && make install" \
-  -p /app/vendor/proj \
-  -s http://download.osgeo.org/proj/proj-${proj_version}.tar.gz \
-  -o $tempdir/proj-${proj_version}.tgz
+filename=$( basename "$1" )
 
 # upload proj to s3
-$basedir/aws/s3 put $S3_BUCKET \
-  proj-${proj_version}.tgz $tempdir/proj-${proj_version}.tgz
+$basedir/aws/s3 put $S3_BUCKET $filename $1
 
 # generate manifest
 $basedir/manifest proj

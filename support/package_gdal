@@ -1,13 +1,5 @@
 #!/bin/sh
-
 set -e
-
-gdal_version="$1"
-
-if [ "$gdal_version" == "" ]; then
-  echo "usage: $0 VERSION"
-  exit 1
-fi
 
 if [ "$AWS_ID" == "" ]; then
   echo "must set AWS_ID"
@@ -25,24 +17,10 @@ if [ "$S3_BUCKET" == "" ]; then
 fi
 
 basedir="$( cd -P "$( dirname "$0" )" && pwd )"
-
-# make a temp directory
-tempdir="$( mktemp -t gdal_$gdal_version )"
-rm -rf $tempdir
-mkdir -p $tempdir
-cd $tempdir
-
-# build and package gdal for heroku
-vulcan build -v \
-  -n gdal \
-  -c "cd gdal-${gdal_version} && ./configure --prefix=/app/vendor/gdal && make && make install" \
-  -p /app/vendor/gdal \
-  -s http://download.osgeo.org/gdal/${gdal_version}/gdal-${gdal_version}.tar.gz \
-  -o $tempdir/gdal-${gdal_version}.tgz
+filename=$( basename "$1" )
 
 # upload gdal to s3
-$basedir/aws/s3 put $S3_BUCKET \
-  gdal-${gdal_version}.tgz $tempdir/gdal-${gdal_version}.tgz
+$basedir/aws/s3 put $S3_BUCKET $filename $1
 
 # generate manifest
 $basedir/manifest gdal
