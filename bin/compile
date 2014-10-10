@@ -15,7 +15,7 @@ S3_BUCKET=${HEROKU_GEO_BUILDBACK_S3_BUCKET:-"cyberdelia-geo-buildpack"}
 
 # Parameters
 BUILD_DIR=$1
-CACHE_DIR=$2
+CACHE_DIR="${2}/${STACK}"
 
 # Setup profile file
 PROFILE_PATH="$BUILD_DIR/.profile.d/geo.sh"
@@ -31,7 +31,7 @@ function indent() {
 }
 
 function manifest_version() {
-  curl "http://${S3_BUCKET}.s3.amazonaws.com/manifest.${1}" -s -o - | head -n 1
+  curl "http://${S3_BUCKET}.s3.amazonaws.com/${STACK}/manifest.${1}" -s -o - | head -n 1
 }
 
 function download_package() {
@@ -40,7 +40,7 @@ function download_package() {
   location="$3"
 
   mkdir -p $location
-  package="https://${S3_BUCKET}.s3.amazonaws.com/$name-$version.tgz"
+  package="https://${S3_BUCKET}.s3.amazonaws.com/${STACK}/$name-$version.tgz"
   curl $package -s -o - | tar xzf - -C $location
 }
 
@@ -110,7 +110,7 @@ if [ -f $CACHE_DIR/.bundle/config ]; then
   rm $CACHE_DIR/.bundle/config
 fi
 echo "---
-BUNDLE_BUILD__RGEO: --with-geos-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-geos-lib=$BUILD_DIR/$TARGET_VENDOR_DIR/lib --with-proj-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-proj-lib=$BUILD_DIR/$TARGET_VENDOR_DIR/lib
+BUNDLE_BUILD__RGEO: "--with-geos-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-geos-lib=$BUILD_DIR/$TARGET_VENDOR_DIR/lib --with-proj-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-proj-lib=$BUILD_DIR/$TARGET_VENDOR_DIR/lib"
 BUNDLE_FROZEN: '1'
 BUNDLE_PATH: vendor/bundle
 BUNDLE_BIN: vendor/bundle/bin
