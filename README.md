@@ -20,3 +20,20 @@ Example usage:
 
 
 Don't forget to pin buildpack versions you want to use in your .buildpacks file.
+
+Testing
+-------
+
+For Geo Django:
+
+>>> from django.contrib.gis import gdal
+>>> gdal.HAS_GDAL
+True
+
+For rgeo:
+
+>>> require 'rgeo'
+>>> RGeo::CoordSys::Proj4.supported?
+=> true
+>>> RGeo::Geos.supported?
+=> true
