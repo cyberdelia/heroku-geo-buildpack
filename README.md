@@ -26,14 +26,18 @@ Testing
 
 For Geo Django:
 
+```python
 >>> from django.contrib.gis import gdal
 >>> gdal.HAS_GDAL
 True
+```
 
 For rgeo:
 
+```ruby 
 >>> require 'rgeo'
 >>> RGeo::CoordSys::Proj4.supported?
 => true
 >>> RGeo::Geos.supported?
 => true
+```
