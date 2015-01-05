@@ -15,8 +15,8 @@ Example usage:
     $ heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
 
     $ cat .buildpacks
-    https://github.com/cyberdelia/heroku-geo-buildpack.git#1.1
-    https://github.com/heroku/heroku-buildpack-ruby.git#v79
+    https://github.com/cyberdelia/heroku-geo-buildpack.git#1.3
+    https://github.com/heroku/heroku-buildpack-ruby.git#v129
 
 
 Don't forget to pin buildpack versions you want to use in your .buildpacks file.
