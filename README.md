@@ -12,7 +12,7 @@ Usage
 
 Example usage:
 
-    $ heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
+    $ heroku buildpacks:set https://github.com/ddollar/heroku-buildpack-multi.git
 
     $ cat .buildpacks
     https://github.com/cyberdelia/heroku-geo-buildpack.git#1.3
