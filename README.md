@@ -4,22 +4,27 @@ Heroku buildpack: geo
 This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) that
 vendors main geo/gis libraries like geos, proj and gdal.
 
-It is meant to be used in conjunction with other buildpacks as part of a
-[multi-buildpack](https://github.com/ddollar/heroku-buildpack-multi).
+You will use this buildpack with other major buildpack such as Ruby buildpack.
 
 Usage
 -----
 
 Example usage:
 
-    $ heroku buildpacks:set https://github.com/ddollar/heroku-buildpack-multi.git
+```
+$ heroku buildpacks:set https://github.com/cyberdelia/heroku-geo-buildpack.git
+$ heroku buildpacks:add heroku/ruby
+```
 
-    $ cat .buildpacks
-    https://github.com/cyberdelia/heroku-geo-buildpack.git#1.3
-    https://github.com/heroku/heroku-buildpack-ruby.git#v129
+Run `heroku buildpacks` to make sure that `heroku-geo-buildpack` is added before
+the language buildpacks.
 
-
-Don't forget to pin buildpack versions you want to use in your .buildpacks file.
+```
+$ heroku buildpacks
+=== sushi Buildpack URLs
+1. https://github.com/cyberdelia/heroku-geo-buildpack.git
+2. heroku/ruby
+```
 
 Testing
 -------
@@ -34,7 +39,7 @@ True
 
 For rgeo:
 
-```ruby 
+```ruby
 >>> require 'rgeo'
 >>> RGeo::CoordSys::Proj4.supported?
 => true
