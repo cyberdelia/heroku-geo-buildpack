@@ -1,0 +1,9 @@
+geo-builder:
+  build: .
+  environment:
+    PROJ_VERSION: "4.9.3"
+    GDAL_VERSION: "2.1.3"
+    GEOS_VERSION: "3.6.1"
+  command: bash -c './geo-build'
+  volumes:
+    - ..:/build

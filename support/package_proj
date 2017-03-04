@@ -1,26 +1,25 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
-if [ "$AWS_ID" == "" ]; then
-  echo "must set AWS_ID"
+if [ "$PROJ_VERSION" == "" ]; then
+  echo "must set PROJ_VERSION"
   exit 1
 fi
 
-if [ "$AWS_SECRET" == "" ]; then
-  echo "must set AWS_SECRET"
-  exit 1
-fi
+# workspace directory
+workspace="$(mktemp -d)"
 
-if [ "$S3_BUCKET" == "" ]; then
-  echo "must set S3_BUCKET"
-  exit 1
-fi
+# output directory
+output="$(mktemp -d)"
 
-basedir="$( cd -P "$( dirname "$0" )" && pwd )"
-filename=$( basename "$1" )
+# build and package proj for heroku
+pushd $workspace
+curl http://download.osgeo.org/proj/proj-$PROJ_VERSION.tar.gz -s -o - | tar zxf -
+pushd proj-$PROJ_VERSION
+./configure --prefix=$output
+make
+make install
 
-# upload proj to s3
-$basedir/aws/s3 put $S3_BUCKET $filename $1
-
-# generate manifest
-$basedir/manifest proj
+pushd $output
+tar -czf proj-$PROJ_VERSION.tgz *
+mv proj-$PROJ_VERSION.tgz /build

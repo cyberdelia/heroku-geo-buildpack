@@ -1,0 +1,5 @@
+set -e
+
+./package_gdal
+./package_geos
+./package_proj
