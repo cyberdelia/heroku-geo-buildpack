@@ -22,4 +22,7 @@ make install
 
 pushd $output
 tar -czf gdal-$GDAL_VERSION.tgz *
-mv gdal-$GDAL_VERSION.tgz /build
+aws s3 cp --acl public-read gdal-$GDAL_VERSION.tgz s3://$S3_BUCKET/$STACK/
+
+echo $GDAL_VERSION > manifest.gdal
+aws s3 cp --acl public-read manifest.gdal s3://$S3_BUCKET/$STACK/

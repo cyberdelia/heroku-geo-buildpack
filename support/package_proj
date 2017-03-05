@@ -22,4 +22,7 @@ make install
 
 pushd $output
 tar -czf proj-$PROJ_VERSION.tgz *
-mv proj-$PROJ_VERSION.tgz /build
+aws s3 cp --acl public-read proj-$PROJ_VERSION.tgz s3://$S3_BUCKET/$STACK/
+
+echo $PROJ_VERSION > manifest.proj
+aws s3 cp --acl public-read manifest.proj s3://$S3_BUCKET/$STACK/
