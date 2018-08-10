@@ -11,7 +11,7 @@ set -e
 unset GIT_DIR
 
 # Configuration
-S3_BUCKET=${HEROKU_GEO_BUILDBACK_S3_BUCKET:-"cyberdelia-geo-buildpack"}
+S3_BUCKET=${HEROKU_GEO_BUILDBACK_S3_BUCKET:-"heroku-buildpack-geo"}
 
 # Parameters
 BUILD_DIR=$1
