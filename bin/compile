@@ -16,6 +16,7 @@ S3_BUCKET=${HEROKU_GEO_BUILDBACK_S3_BUCKET:-"heroku-buildpack-geo"}
 # Parameters
 BUILD_DIR=$1
 CACHE_DIR="${2}/${STACK}"
+BP_DIR=$(cd $(dirname ${0:-}); cd ..; pwd)
 
 # Setup profile file
 PROFILE_PATH="$BUILD_DIR/.profile.d/geo.sh"
@@ -104,20 +105,10 @@ set-env GDAL_LIBRARY_PATH "$APP_VENDOR/lib"
 set-env PROJ4_LIBRARY_PATH "$APP_VENDOR/lib"
 set-env GDAL_DATA "$APP_VENDOR/share/gdal"
 
-# Bundle workaround
-mkdir -p $BUILD_DIR/.bundle
-if [ -f $CACHE_DIR/.bundle/config ]; then
-  rm $CACHE_DIR/.bundle/config
-fi
-echo "---
-BUNDLE_BUILD__RGEO: "--with-opt-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-geos-config=$BUILD_DIR/$TARGET_VENDOR_DIR/bin/geos-config"
-BUNDLE_FROZEN: '1'
-BUNDLE_PATH: vendor/bundle
-BUNDLE_BIN: vendor/bundle/bin
-BUNDLE_WITHOUT: development:test
-BUNDLE_DISABLE_SHARED_GEMS: '1'
-" > $BUILD_DIR/.bundle/config
 
+# Export env var for next build
+echo "BUNDLE_BUILD__RGEO=\"--with-opt-dir=$BUILD_DIR/$TARGET_VENDOR_DIR --with-geos-config=$BUILD_DIR/$TARGET_VENDOR_DIR/bin/geos-config\"" >> $BP_DIR/export
+set-default-env BUNDLE_BUILD__RGEO "--with-opt-dir=$TARGET_VENDOR_DIR --with-geos-config=$TARGET_VENDOR_DIR/bin/geos-config"
 set-default-env LIBRARY_PATH "$APP_VENDOR/lib"
 set-default-env LD_LIBRARY_PATH "$APP_VENDOR/lib"
 set-default-env CPATH "$APP_VENDOR/include"
